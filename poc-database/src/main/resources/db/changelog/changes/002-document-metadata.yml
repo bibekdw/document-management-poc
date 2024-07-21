@@ -1,0 +1,107 @@
+databaseChangeLog:
+  - changeSet:
+      id: "Create metadata_data_type"
+      author: Bibek
+      comment: "Create metadata_data_type table and insert data types"
+      changes:
+        - createTable:
+            tableName: metadata_data_type
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: type_name
+                  type: varchar(255)
+        - insert:
+            tableName: metadata_data_type
+            columns:
+              - column:
+                  name: type_name
+                  value: "text"
+        - insert:
+            tableName: metadata_data_type
+            columns:
+              - column:
+                  name: type_name
+                  value: "int"
+        - insert:
+            tableName: metadata_data_type
+            columns:
+              - column:
+                  name: type_name
+                  value: "bigint"
+        - insert:
+            tableName: metadata_data_type
+            columns:
+              - column:
+                  name: type_name
+                  value: "date"
+        - insert:
+            tableName: metadata_data_type
+            columns:
+              - column:
+                  name: type_name
+                  value: "boolean"
+  - changeSet:
+      id: "Create metadata table"
+      author: Bibek
+      comment: "Create metadata table with reference to metadata_data_type"
+      changes:
+        - createTable:
+            tableName: metadata
+            columns:
+              - column:
+                  name: metadata_id
+                  type: INTEGER
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: data_type_id
+                  type: int
+                  constraints:                    
+                    nullable: false
+                    foreignKey:
+                      name: fk_metadata_data_type
+                      references: metadata_data_type(data_type_id)
+  - changeSet:
+      id: "document_metadata_value"
+      author: Bibek
+      comment: "Create document_metadata_value table linking to metadata"
+      changes:
+        - createTable:
+            tableName: document_metadata_value
+            columns:
+              - column:
+                  name: id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: document_id
+                  type: INTEGER
+                  constraints:                    
+                    nullable: false
+                    foreignKey:
+                      name: fk_document_id
+                      references: document(document_id)
+              - column:
+                  name: metadata_id
+                  type: INTEGER
+                  constraints:                    
+                    nullable: false
+                    foreignKey:
+                      name: fk_document_metadata_value_metadata
+                      references: metadata(metadata_id)
+              - column:
+                  name: metadata_value
+                  type: text

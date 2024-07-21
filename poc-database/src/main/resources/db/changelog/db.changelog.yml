@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - include:
+      file: changes/000-init.yml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/001-document-rendition.yml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/002-document-metadata.yml
+      relativeToChangelogFile: true

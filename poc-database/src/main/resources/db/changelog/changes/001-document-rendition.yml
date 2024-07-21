@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_document_rendition_table
+      author: bibek
+      changes:
+        - createTable:
+            tableName: document_rendition
+            columns:
+              - column:
+                  name: document_rendition_id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: document_id
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+                    foreignKey:
+                      name: fk_document_rendition_document_id
+                      references: document(document_id)
+              - column:
+                  name: rendition_id
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: page_number
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_path
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: disk_id
+                  type: INTEGER
+                  constraints:
+                    nullable: false

@@ -1,0 +1,285 @@
+databaseChangeLog:
+# Custodian table
+  - changeSet:
+      id: create_custodian_table
+      author: Bibek
+      changes:
+        - createTable:
+            tableName: custodian
+            columns:
+              - column:
+                  name: custodian_id
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: insert_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: custodian_name
+                  type: varchar(255)
+# Source table
+  - changeSet:
+      id: create_source_table
+      author: Bibek
+      changes:
+        - createTable:
+            tableName: source
+            columns:
+              - column:
+                  name: source_id
+                  type: INT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: insert_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP              
+              - column:
+                  name: source_name
+                  type: varchar(255)
+              - column:
+                  name: source_path
+                  type: varchar(255)
+              - column:
+                  name: custodian_id
+                  type: INT
+              - column:
+                  name: source_type
+                  type: INT
+# FOlder table
+  - changeSet:
+      id: create_folder_table
+      author: Bibek
+      changes:
+        - createTable:
+            tableName: folder
+            columns:
+              - column:
+                  name: folder_id
+                  type: INT
+                constraints:
+                  primaryKey: true
+                  nullable: false
+              - column:
+                  name: insert_date
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: folder_name
+                  type: VARCHAR(255)
+                constraints:
+                  nullable: false
+              - column:
+                  name: folder_path
+                  type: TEXT
+                constraints:
+                  nullable: true
+              - column:
+                  name: folder_type
+                  type: varchar(255)
+              - column:
+                  name: custodian_id
+                  type: int
+              - column:
+                  name: parent_folder_id
+                  type: INT
+                constraints:
+                  nullable: true
+                  foreignKey:
+                    name: fk_parent_folder_id
+                    references: folder(folder_id)
+              - column:
+                  name: source_id
+                  type: INT
+                constraints:
+                  nullable: true
+                  foreignKey:
+                    name: fk_folder_source_id
+                    references: source(source_id) 
+#Document table
+  - changeSet:
+      id: create_document_table
+      author: Bibek
+      changes:
+        - createTable:
+            tableName: document
+            columns:
+              - column:
+                  name: document_id
+                  type: INT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: folder_id
+                  type: INT
+                  constraints:
+                    nullable: true
+                    foreignKey:
+                      name: fk_document_folder_id
+                      references: folder(folder_id)
+              - column:
+                  name: source_id
+                  type: INT
+                  constraints:
+                    nullable: true
+                    foreignKey:
+                      name: fk_document_source_id
+                      references: source(source_id)
+              - column:
+                  name: family_id
+                  type: INT
+                  constraints:
+                    nullable: true
+                    foreignKey:
+                      name: fk_family_id
+                      references: document(document_id)
+              - column:
+                  name: parent_document_id
+                  type: INT
+                  constraints:
+                    nullable: true
+                    foreignKey:
+                      name: fk_parent_document_id
+                      references: document(document_id)
+              - column:
+                  name: original_document_id_global
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+                    foreignKey:
+                      name: fk_document_original_global_id
+                      references: document(document_id)
+              - column:
+                  name: original_document_id_custodial
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+                    foreignKey:
+                      name: fk_document_original_custodial_id
+                      references: document(document_id)                      
+              - column:
+                  name: md5_hash
+                  type: varchar(255)               
+              - column:
+                  name: is_attachment
+                  type: boolean
+                  defaultValue: false		
+              - column:
+                  name: is_embedded_document
+                  type: boolean
+                  defaultValue: false		
+              - column:
+                  name: doc_path
+                  type: TEXT                 
+              - column:
+                  name: file_name
+                  type: varchar(255)
+              - column:
+                  name: file_extension
+                  type: varchar(255)
+              - column:
+                  name: document_size
+                  type: bigint
+              # Additional columns based on the provided properties
+              - column:
+                  name: message_class
+                  type: varchar(255)
+              - column:
+                  name: message_id
+                  type: varchar(255)
+              - column:
+                  name: creation_time
+                  type: TIMESTAMP
+              - column:
+                  name: sent_date
+                  type: TIMESTAMP
+              - column:
+                  name: last_modification_time
+                  type: TIMESTAMP
+              - column:
+                  name: received_date
+                  type: TIMESTAMP
+              - column:
+                  name: importance
+                  type: INTEGER
+              - column:
+                  name: priority
+                  type: INTEGER
+              - column:
+                  name: reply_to_id
+                  type: varchar(255)
+              - column:
+                  name: display_to
+                  type: TEXT
+              - column:
+                  name: display_cc
+                  type: TEXT
+              - column:
+                  name: display_bcc
+                  type: TEXT
+              - column:
+                  name: email_from
+                  type: varchar(255)
+              - column:
+                  name: email_to
+                  type: TEXT
+              - column:
+                  name: email_cc
+                  type: TEXT
+              - column:
+                  name: email_bcc
+                  type: TEXT
+              - column:
+                  name: email_subject
+                  type: TEXT
+              - column:
+                  name: attachments
+                  type: varchar(255)
+              - column:
+                  name: email_body
+                  type: TEXT
+              - column:
+                  name: html_body
+                  type: TEXT
+              - column:
+                  name: has_attachments
+                  type: BOOLEAN
+                  defaultValue: false		
+              - column:
+                  name: attachment_count
+                  type: INTEGER
+              - column:
+                  name: meeting_attendees
+                  type: TEXT
+              - column:
+                  name: meeting_start_time
+                  type: TIMESTAMP
+              - column:
+                  name: meeting_end_time
+                  type: TIMESTAMP
+              - column:
+                  name: meeting_location
+                  type: varchar(255)
+              - column:
+                  name: task_owner
+                  type: varchar(255)
+              - column:
+                  name: task_due_date
+                  type: TIMESTAMP
+              - column:
+                  name: task_status
+                  type: INTEGER
+              - column:
+                  name: contact_full_name
+                  type: varchar(255)
+              - column:
+                  name: contact_email_address
+                  type: varchar(255)
+              - column:
+                  name: contact_company_name
+                  type: varchar(255)                                       
